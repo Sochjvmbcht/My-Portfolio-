@@ -1,80 +1,12 @@
-const menuButton = document.querySelector(".menu-toggle");
-const navLinks = document.querySelector(".nav-links");
-
-menuButton?.addEventListener("click", () => {
-  const isOpen = navLinks.classList.toggle("open");
-  menuButton.classList.toggle("open", isOpen);
-  menuButton.setAttribute("aria-expanded", String(isOpen));
-});
-
-navLinks?.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => {
-    navLinks.classList.remove("open");
-    menuButton?.classList.remove("open");
-    menuButton?.setAttribute("aria-expanded", "false");
-  });
-});
-
-const year = document.querySelector("#year");
-if (year) year.textContent = new Date().getFullYear();
-
-// Animated headline: cycles through the work's real focus areas.
-const typedWord = document.querySelector("#typed-word");
-const phrases = ["working software", "useful AI tools", "connected systems", "cloud automation"];
-let phraseIndex = 0;
-let charIndex = phrases[0].length;
-let deleting = false;
-function typeHeadline() {
-  if (!typedWord || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const phrase = phrases[phraseIndex];
-  if (deleting) {
-    charIndex--;
-    typedWord.textContent = phrase.slice(0, charIndex);
-  } else {
-    charIndex++;
-    typedWord.textContent = phrase.slice(0, charIndex);
-  }
-  let delay = deleting ? 48 : 82;
-  if (!deleting && charIndex === phrase.length) {
-    deleting = true;
-    delay = 1700;
-  } else if (deleting && charIndex === 0) {
-    deleting = false;
-    phraseIndex = (phraseIndex + 1) % phrases.length;
-    delay = 350;
-  }
-  window.setTimeout(typeHeadline, delay);
-}
-if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  window.setTimeout(typeHeadline, 1800);
-}
-
-// Reveal content as it enters the viewport.
-const revealItems = document.querySelectorAll(".reveal");
-if ("IntersectionObserver" in window) {
-  const observer = new IntersectionObserver((entries, currentObserver) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-        currentObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  revealItems.forEach((item) => observer.observe(item));
-} else {
-  revealItems.forEach((item) => item.classList.add("visible"));
-}
-
-// Subtle pointer light on devices with a fine pointer.
-const cursorGlow = document.querySelector(".cursor-glow");
-if (cursorGlow && window.matchMedia("(pointer: fine)").matches) {
-  window.addEventListener("pointermove", (event) => {
-    cursorGlow.style.left = event.clientX + "px";
-    cursorGlow.style.top = event.clientY + "px";
-  }, { passive: true });
-}
-
-// Stagger project and skill reveals without adding a framework.
-document.querySelectorAll(".project-card, .skill-group, .timeline-item").forEach((item, index) => {
-  item.style.transitionDelay = (index % 3) * 90 + "ms";
-});
+const menuButton=document.querySelector(".menu-btn");
+const nav=document.querySelector(".nav-links");
+menuButton?.addEventListener("click",()=>{const open=nav.classList.toggle("open");menuButton.setAttribute("aria-expanded",String(open));});
+nav?.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{nav.classList.remove("open");menuButton?.setAttribute("aria-expanded","false");}));
+const year=document.querySelector("#year");if(year)year.textContent=new Date().getFullYear();
+const word=document.querySelector("#rotating-word");
+const words=["intelligence.","curiosity.","good engineering.","clear thinking."];
+let wi=0,ci=words[0].length,remove=true;
+function type(){if(!word||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;const current=words[wi];ci+=remove?-1:1;word.textContent=current.slice(0,ci);let wait=remove?45:85;if(ci===0){remove=false;wi=(wi+1)%words.length;wait=300;}else if(ci===words[wi].length&&!remove){remove=true;wait=1600;}window.setTimeout(type,wait);}
+if(!window.matchMedia("(prefers-reduced-motion: reduce)").matches)setTimeout(type,1700);
+const targets=document.querySelectorAll(".section-top,.about-grid,.experience-item,.project,.education-item,.tool-grid article,.contact-panel");
+if("IntersectionObserver"in window){const observer=new IntersectionObserver((entries,obs)=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("in-view");obs.unobserve(entry.target);}}),{threshold:.12});targets.forEach((el,i)=>{el.classList.add("reveal");el.style.transitionDelay=(i%3)*75+"ms";observer.observe(el);});}else targets.forEach(el=>el.classList.add("in-view"));
