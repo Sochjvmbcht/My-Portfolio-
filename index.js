@@ -1,18 +1,13 @@
 const menuButton = document.querySelector(".menu-toggle");
-const navLinks = document.querySelector(".nav-links");
-
+const nav = document.querySelector(".topbar nav");
 menuButton?.addEventListener("click", () => {
-  const isOpen = navLinks.classList.toggle("open");
-  menuButton.setAttribute("aria-expanded", String(isOpen));
-  menuButton.textContent = isOpen ? "×" : "☰";
+  const open = nav.classList.toggle("open");
+  menuButton.setAttribute("aria-expanded", String(open));
+  menuButton.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+  menuButton.textContent = open ? "×" : "＋";
 });
-
-navLinks?.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => {
-    navLinks.classList.remove("open");
-    menuButton?.setAttribute("aria-expanded", "false");
-    if (menuButton) menuButton.textContent = "☰";
-  });
-});
-
-document.querySelector("#year").textContent = new Date().getFullYear();
+nav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+  nav.classList.remove("open");
+  menuButton?.setAttribute("aria-expanded", "false");
+  if (menuButton) menuButton.textContent = "＋";
+}));
